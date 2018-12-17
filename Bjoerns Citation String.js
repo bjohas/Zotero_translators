@@ -32,11 +32,25 @@ function doExport() {
     beginning = "❲";
     middle = "|";
     end = "❳";
+    beginning = "❲";
+    middle = "|(";
+    end = ")❳";
+    var keyAtFront = true;
+    if (keyAtFront) {
+	beginning = "⟦";
+	middle = "|(";
+	end = ")⟧";
+    } else {
+	beginning = "⟦(";
+	middle = ")|";
+	end = "⟧";
+    };
     var item;
     while (item = Zotero.nextItem()) {
+	var citation = "";
         var mem = new Mem(item);
         var memdate = new Mem(item);
-        Zotero.write(beginning);
+        // Zotero.write(beginning);
         var library_id = item.libraryID ? item.libraryID : 0;
         if (item.creators.length >0){
             mem.set(item.creators[0].lastName,",");
@@ -57,9 +71,12 @@ function doExport() {
         var date = Zotero.Utilities.strToDate(item.date);
         var dateS = (date.year) ? date.year : item.date;
         memdate.set(dateS,"","no date");
-        Zotero.write("" + mem.get() + " " + memdate.get() + middle);
+        // Zotero.write("" + mem.get() + " " + memdate.get() + middle);
         if (Zotero.getHiddenPref("ODFScan.useZoteroSelect")) {
-            Zotero.write("zotero://select/items/" + library_id + "_" + item.key + end);
+            // Zotero.write("zotero://select/items/" + library_id + "_" + item.key + end);
+	    citation += beginning;
+	    citation += "" + mem.get() + " " + memdate.get() + middle;
+	    citation += "zotero://select/items/" + library_id + "_" + item.key + end;
         } else {
             var m = item.uri.match(/http:\/\/zotero\.org\/(users|groups)\/([^\/]+)\/items\/(.+)/);
             var prefix;
@@ -81,7 +98,18 @@ function doExport() {
                 prefix = "zu:";
                 lib = "0";
             }
-            Zotero.write(prefix + lib + ":" + item.key + end);
-        }
+            // Zotero.write(prefix + lib + ":" + item.key + end);
+	    var itemidentifier = prefix + lib + ":" + item.key;
+	    if (keyAtFront) {
+		citation += beginning + itemidentifier + middle;
+		citation += "" + mem.get() + " " + memdate.get();
+		citation += end;
+	    } else {
+		citation += beginning;
+		citation += "" + mem.get() + " " + memdate.get() + middle;
+		citation += itemidentifier + end;
+	    };
+	}
+	Zotero.write(citation);
     }
 }
