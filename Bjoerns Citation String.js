@@ -1,6 +1,6 @@
 {
 	"translatorID": "9ac77400-38b7-49b9-90e4-871d8f53d16e",
-	"label": "B Scannable Cite - adapted from Scannable Cite",
+	"label": "Bjoerns Citation String",
 	"creator": "Bjoern Hassler — original creators Scott Campbell, Avram Lyon, Nathan Schneider, Sebastian Karcher, Frank Bennett",
 	"target": "html",
 	"minVersion": "3.0",
